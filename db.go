@@ -10,10 +10,24 @@ import (
 	_ "github.com/lib/pq"
 )
 
+func getConnURL() string {
+	var connURL string
+	if os.Getenv("PG_CONNECTION_URL") != "" {
+		connURL = os.Getenv("PG_CONNECTION_URL")
+	} else {
+		connURL = "postgres://" +
+			os.Getenv("PG_USER_PASS") + "@" +
+			os.Getenv("PG_PORT_5432_TCP_ADDR") + ":" +
+			os.Getenv("PG_PORT_5432_TCP_PORT") + "/" +
+			os.Getenv("PG_DB_NAME") + "?sslmode=disable"
+	}
+	return connURL
+}
+
 func (api *Api) InitDB() {
 
 	// example: postgres://user:pass@host/db?sslmode=disable
-	db, err := sql.Open("postgres", os.Getenv("PG_CONNECTION_URL"))
+	db, err := sql.Open("postgres", getConnURL())
 
 	checkErr(err, "sql.Open failed")
 	api.DB = &gorp.DbMap{Db: db, Dialect: gorp.PostgresDialect{}}
