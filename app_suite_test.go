@@ -18,8 +18,11 @@ func HandleTestError(err error) {
 	}
 }
 
+var api *Api
+
 var _ = BeforeSuite(func() {
 
+	api = &Api{}
 	api.InitDB()
 	api.InitRoutes()
 

@@ -9,9 +9,9 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func WidgetsIndex(w http.ResponseWriter, r *http.Request) {
+func WidgetsIndex(a *Api, w http.ResponseWriter, r *http.Request) {
 
-	widgets, err := GetAllWidgets()
+	widgets, err := GetAllWidgets(a.DB)
 	if err != nil {
 		Error(w, "Internal Server Error", 500)
 		return
@@ -26,7 +26,7 @@ func WidgetsIndex(w http.ResponseWriter, r *http.Request) {
 	Respond(w, widgetsJSON, 200)
 }
 
-func WidgetsCreate(w http.ResponseWriter, r *http.Request) {
+func WidgetsCreate(a *Api, w http.ResponseWriter, r *http.Request) {
 
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
@@ -48,7 +48,7 @@ func WidgetsCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = widget.Save()
+	err = widget.Save(a.DB)
 	if err != nil {
 		Error(w, "Internal Server Error", 500)
 		return
@@ -63,7 +63,7 @@ func WidgetsCreate(w http.ResponseWriter, r *http.Request) {
 	Respond(w, widgetJSON, 201)
 }
 
-func WidgetsShow(w http.ResponseWriter, r *http.Request) {
+func WidgetsShow(a *Api, w http.ResponseWriter, r *http.Request) {
 
 	vars := mux.Vars(r)
 	idStr := vars["id"]
@@ -73,7 +73,7 @@ func WidgetsShow(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	widget, err := FindWidget(id)
+	widget, err := FindWidget(a.DB, id)
 	if RecordNotFoundError(err) {
 		Error(w, "Not Found", 404)
 		return
@@ -89,7 +89,7 @@ func WidgetsShow(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func WidgetsUpdate(w http.ResponseWriter, r *http.Request) {
+func WidgetsUpdate(a *Api, w http.ResponseWriter, r *http.Request) {
 
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
@@ -112,7 +112,7 @@ func WidgetsUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	widget, err := FindWidget(id)
+	widget, err := FindWidget(a.DB, id)
 	if RecordNotFoundError(err) {
 		Error(w, "Not Found", 404)
 		return
@@ -126,7 +126,7 @@ func WidgetsUpdate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	widget.Name = params.Name
-	widget.Save()
+	widget.Save(a.DB)
 
 	widgetJSON, err := json.Marshal(widget.Export())
 	if err != nil {
@@ -137,7 +137,7 @@ func WidgetsUpdate(w http.ResponseWriter, r *http.Request) {
 	Respond(w, widgetJSON, 200)
 }
 
-func WidgetsDestroy(w http.ResponseWriter, r *http.Request) {
+func WidgetsDestroy(a *Api, w http.ResponseWriter, r *http.Request) {
 
 	vars := mux.Vars(r)
 	idStr := vars["id"]
@@ -147,13 +147,13 @@ func WidgetsDestroy(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	widget, err := FindWidget(id)
+	widget, err := FindWidget(a.DB, id)
 	if RecordNotFoundError(err) {
 		Error(w, "Not Found", 404)
 		return
 	}
 
-	err = widget.Delete()
+	err = widget.Delete(a.DB)
 	if err != nil {
 		Error(w, "Internal Server Error", 500)
 		return

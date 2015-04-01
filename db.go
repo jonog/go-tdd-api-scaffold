@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/coopernurse/gorp"
+	"github.com/go-gorp/gorp"
 	_ "github.com/lib/pq"
 )
 
@@ -34,7 +34,7 @@ func (api *Api) InitDB() {
 
 	api.DB.AddTableWithName(Widget{}, "widgets").SetKeys(true, "Id")
 
-	// fix for production
+	// Remove & add migrations in production setup
 	fmt.Println("creating tables if they dont' exist")
 	err = api.DB.CreateTablesIfNotExists()
 	checkErr(err, "Create tables failed")
@@ -49,5 +49,5 @@ func checkErr(err error, msg string) {
 }
 
 func RecordNotFoundError(err error) bool {
-	return err == sql.ErrNoRows
+	return err != nil && err == sql.ErrNoRows
 }

@@ -5,10 +5,11 @@ import "github.com/gorilla/mux"
 func (api *Api) InitRoutes() {
 
 	api.Router = mux.NewRouter()
-	api.Router.HandleFunc("/widgets", WidgetsIndex).Methods("GET")
-	api.Router.HandleFunc("/widgets", WidgetsCreate).Methods("POST")
-	api.Router.HandleFunc("/widgets/{id}", WidgetsShow).Methods("GET")
-	api.Router.HandleFunc("/widgets/{id}", WidgetsUpdate).Methods("PUT")
-	api.Router.HandleFunc("/widgets/{id}", WidgetsDestroy).Methods("DELETE")
+
+	api.Router.Handle("/widgets", apiHandler{api, WidgetsIndex}).Methods("GET")
+	api.Router.Handle("/widgets", apiHandler{api, WidgetsCreate}).Methods("POST")
+	api.Router.Handle("/widgets/{id}", apiHandler{api, WidgetsShow}).Methods("GET")
+	api.Router.Handle("/widgets/{id}", apiHandler{api, WidgetsUpdate}).Methods("PUT")
+	api.Router.Handle("/widgets/{id}", apiHandler{api, WidgetsDestroy}).Methods("DELETE")
 
 }

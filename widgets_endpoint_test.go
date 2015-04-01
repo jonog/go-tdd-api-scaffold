@@ -18,10 +18,10 @@ var _ = Describe("API", func() {
 
 		It("returns the list of widgets", func() {
 
-			r1, err := CreateWidget(&WidgetParams{Name: "Yo 1"})
+			r1, err := CreateWidget(api.DB, &WidgetParams{Name: "Yo 1"})
 			HandleTestError(err)
 
-			r2, err := CreateWidget(&WidgetParams{Name: "Yo 2"})
+			r2, err := CreateWidget(api.DB, &WidgetParams{Name: "Yo 2"})
 			HandleTestError(err)
 
 			request, _ := http.NewRequest("GET", "/widgets", nil)
@@ -66,6 +66,10 @@ var _ = Describe("API", func() {
 			var testInt int64
 			Ω(widget.Id).Should(BeAssignableToTypeOf(testInt))
 
+			createdWidget, err := FindWidget(api.DB, widget.Id)
+			HandleTestError(err)
+			Ω(createdWidget.Name).To(Equal("Yo Widget"))
+
 		})
 
 		It("returns a 400 if params are invalid", func() {
@@ -83,7 +87,7 @@ var _ = Describe("API", func() {
 
 		It("returns a widget", func() {
 
-			widget, err := CreateWidget(&WidgetParams{Name: "Yo 1"})
+			widget, err := CreateWidget(api.DB, &WidgetParams{Name: "Yo 1"})
 			HandleTestError(err)
 
 			url := "/widgets/" + strconv.FormatInt(widget.Id, 10)
@@ -96,10 +100,10 @@ var _ = Describe("API", func() {
 
 		It("returns a 404 if the widget does not exist", func() {
 
-			widget, err := CreateWidget(&WidgetParams{Name: "Yo 1"})
+			widget, err := CreateWidget(api.DB, &WidgetParams{Name: "Yo 1"})
 			HandleTestError(err)
 			widgetId := widget.Id
-			err = widget.Delete()
+			err = widget.Delete(api.DB)
 			HandleTestError(err)
 
 			url := "/widgets/" + strconv.FormatInt(widgetId, 10)
@@ -116,7 +120,7 @@ var _ = Describe("API", func() {
 
 		It("updates a widget", func() {
 
-			widget, err := CreateWidget(&WidgetParams{Name: "Yo 1"})
+			widget, err := CreateWidget(api.DB, &WidgetParams{Name: "Yo 1"})
 			HandleTestError(err)
 
 			url := "/widgets/" + strconv.FormatInt(widget.Id, 10)
@@ -133,7 +137,7 @@ var _ = Describe("API", func() {
 			Ω(resourceRes.Name).To(Equal("Yo 2"))
 
 			// check db has been updated
-			updatedResource, err := FindWidget(widget.Id)
+			updatedResource, err := FindWidget(api.DB, widget.Id)
 			HandleTestError(err)
 			Ω(updatedResource.Name).To(Equal("Yo 2"))
 
@@ -141,10 +145,10 @@ var _ = Describe("API", func() {
 
 		It("returns a 404 if the widget does not exist", func() {
 
-			widget, err := CreateWidget(&WidgetParams{Name: "Yo 1"})
+			widget, err := CreateWidget(api.DB, &WidgetParams{Name: "Yo 1"})
 			HandleTestError(err)
 			widgetId := widget.Id
-			err = widget.Delete()
+			err = widget.Delete(api.DB)
 			HandleTestError(err)
 
 			url := "/widgets/" + strconv.FormatInt(widgetId, 10)
@@ -157,7 +161,7 @@ var _ = Describe("API", func() {
 
 		It("returns a 400 if params are invalid", func() {
 
-			widget, err := CreateWidget(&WidgetParams{Name: "Yo 1"})
+			widget, err := CreateWidget(api.DB, &WidgetParams{Name: "Yo 1"})
 			HandleTestError(err)
 
 			url := "/widgets/" + strconv.FormatInt(widget.Id, 10)
@@ -167,7 +171,7 @@ var _ = Describe("API", func() {
 			api.Router.ServeHTTP(res, request)
 			Ω(res.Code).To(Equal(400))
 
-			updatedResource, err := FindWidget(widget.Id)
+			updatedResource, err := FindWidget(api.DB, widget.Id)
 			HandleTestError(err)
 			Ω(updatedResource.Name).To(Equal("Yo 1"))
 
@@ -179,7 +183,7 @@ var _ = Describe("API", func() {
 
 		It("deletes a widget", func() {
 
-			widget, err := CreateWidget(&WidgetParams{Name: "Yo 1"})
+			widget, err := CreateWidget(api.DB, &WidgetParams{Name: "Yo 1"})
 			HandleTestError(err)
 
 			request, _ := http.NewRequest("DELETE", "/widgets/"+strconv.FormatInt(widget.Id, 10), nil)
@@ -187,17 +191,17 @@ var _ = Describe("API", func() {
 			api.Router.ServeHTTP(res, request)
 			Ω(res.Code).To(Equal(200))
 
-			_, err = FindWidget(widget.Id)
+			_, err = FindWidget(api.DB, widget.Id)
 			Ω(RecordNotFoundError(err)).To(Equal(true))
 
 		})
 
 		It("returns a 404 if the widget does not exist", func() {
 
-			widget, err := CreateWidget(&WidgetParams{Name: "Yo 1"})
+			widget, err := CreateWidget(api.DB, &WidgetParams{Name: "Yo 1"})
 			HandleTestError(err)
 			widgetId := widget.Id
-			err = widget.Delete()
+			err = widget.Delete(api.DB)
 			HandleTestError(err)
 
 			url := "/widgets/" + strconv.FormatInt(widgetId, 10)

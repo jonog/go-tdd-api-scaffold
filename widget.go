@@ -43,28 +43,28 @@ func BuildWidget(params *WidgetParams) *Widget {
 	return &resource
 }
 
-func CreateWidget(params *WidgetParams) (*Widget, error) {
+func CreateWidget(db *gorp.DbMap, params *WidgetParams) (*Widget, error) {
 	resource := BuildWidget(params)
-	err := resource.Save()
+	err := resource.Save(db)
 	return resource, err
 }
 
-func GetAllWidgets() (widgets []Widget, err error) {
-	_, err = api.DB.Select(&widgets, "SELECT * FROM widgets")
+func GetAllWidgets(db *gorp.DbMap) (widgets []Widget, err error) {
+	_, err = db.Select(&widgets, "SELECT * FROM widgets")
 	return widgets, err
 }
 
-func FindWidget(id int64) (*Widget, error) {
+func FindWidget(db *gorp.DbMap, id int64) (*Widget, error) {
 	resource := Widget{}
-	err := api.DB.SelectOne(&resource, "select * from widgets where id=$1", id)
+	err := db.SelectOne(&resource, "select * from widgets where id=$1", id)
 	return &resource, err
 }
 
-func (c *Widget) Save() (err error) {
+func (c *Widget) Save(db *gorp.DbMap) (err error) {
 	if c.Id == 0 {
-		err = api.DB.Insert(c)
+		err = db.Insert(c)
 	} else {
-		_, err = api.DB.Update(c)
+		_, err = db.Update(c)
 	}
 	return err
 }
@@ -76,8 +76,8 @@ func (c *Widget) Validate() error {
 	return nil
 }
 
-func (c *Widget) Delete() (err error) {
-	_, err = api.DB.Delete(c)
+func (c *Widget) Delete(db *gorp.DbMap) (err error) {
+	_, err = db.Delete(c)
 	return err
 }
 

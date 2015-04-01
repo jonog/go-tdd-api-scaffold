@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/coopernurse/gorp"
+	"github.com/go-gorp/gorp"
 	"github.com/gorilla/mux"
 )
 
@@ -13,10 +13,18 @@ type Api struct {
 	DB     *gorp.DbMap
 }
 
-var api Api
+type apiHandler struct {
+	*Api
+	handler func(*Api, http.ResponseWriter, *http.Request)
+}
+
+func (ah apiHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	ah.handler(ah.Api, w, r)
+}
 
 func main() {
 
+	api := &Api{}
 	api.InitDB()
 	defer api.DB.Db.Close()
 

@@ -3,13 +3,13 @@
 	"GoVersion": "go1.4",
 	"Deps": [
 		{
-			"ImportPath": "github.com/coopernurse/gorp",
-			"Comment": "v1.7",
-			"Rev": "5d19ebd22fdcf3b9fb1c8cbfcf1d4e78e102f1e0"
+			"ImportPath": "github.com/go-gorp/gorp",
+			"Comment": "v1.7-14-g0160e43",
+			"Rev": "0160e4351b412e12d49430f6c46238add55455b7"
 		},
 		{
 			"ImportPath": "github.com/gorilla/context",
-			"Rev": "14f550f51af52180c2eefed15e5fd18d63c0a64a"
+			"Rev": "215affda49addc4c8ef7e2534915df2c8c35c6cd"
 		},
 		{
 			"ImportPath": "github.com/gorilla/mux",
@@ -17,17 +17,18 @@
 		},
 		{
 			"ImportPath": "github.com/lib/pq",
-			"Rev": "3c5c5bd6383b42aec97b5aa39fba2cddd35aea36"
+			"Comment": "go1.0-cutoff-8-g3e3efe5",
+			"Rev": "3e3efe51a0c4b23e817075438703cb15bd58c1a8"
 		},
 		{
 			"ImportPath": "github.com/onsi/ginkgo",
-			"Comment": "v1.1.0-6-g527974d",
-			"Rev": "527974d5873391de9d8a25b761b5fc1382e9279e"
+			"Comment": "v1.1.0-32-g291f28e",
+			"Rev": "291f28e66dd277f35d3635990a7448759645c7e7"
 		},
 		{
 			"ImportPath": "github.com/onsi/gomega",
-			"Comment": "v1.0",
-			"Rev": "a78ae492d53aad5a7a232d0d0462c14c400e3ee7"
+			"Comment": "v1.0-28-g8adf9e1",
+			"Rev": "8adf9e1730c55cdc590de7d49766cb2acc88d8f2"
 		}
 	]
 }
