@@ -34,14 +34,14 @@ func WidgetsCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var params WidgetParams
-	err = json.Unmarshal(body, &params)
+	params := &WidgetParams{}
+	err = json.Unmarshal(body, params)
 	if err != nil {
 		Error(w, "Internal Server Error", 500)
 		return
 	}
 
-	widget := BuildWidget(params.Name)
+	widget := BuildWidget(params)
 	err = widget.Validate()
 	if err != nil {
 		Error(w, "Invalid parameters", 400)

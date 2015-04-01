@@ -3,6 +3,8 @@ package main
 import (
 	"errors"
 	"time"
+
+	"github.com/go-gorp/gorp"
 )
 
 type Widget struct {
@@ -36,13 +38,13 @@ func ExportWidgets(widgets []Widget) []WidgetPublic {
 	return widgetsPublic
 }
 
-func BuildWidget(name string) *Widget {
-	resource := Widget{Name: name, CreatedAt: time.Now().UnixNano()}
+func BuildWidget(params *WidgetParams) *Widget {
+	resource := Widget{Name: params.Name}
 	return &resource
 }
 
-func CreateWidget(name string) (*Widget, error) {
-	resource := BuildWidget(name)
+func CreateWidget(params *WidgetParams) (*Widget, error) {
+	resource := BuildWidget(params)
 	err := resource.Save()
 	return resource, err
 }
