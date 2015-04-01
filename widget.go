@@ -26,10 +26,10 @@ type WidgetParams struct {
 
 var WidgetColumns string = strings.Join([]string{"id", "name", "created_at", "updated_at"}, ",")
 
-func (c *Widget) Export() WidgetPublic {
+func (r *Widget) Export() WidgetPublic {
 	return WidgetPublic{
-		Id:   c.Id,
-		Name: c.Name,
+		Id:   r.Id,
+		Name: r.Name,
 	}
 }
 
@@ -63,24 +63,24 @@ func FindWidget(db *gorp.DbMap, id int64) (*Widget, error) {
 	return &resource, err
 }
 
-func (c *Widget) Save(db *gorp.DbMap) (err error) {
-	if c.Id == 0 {
-		err = db.Insert(c)
+func (r *Widget) Save(db *gorp.DbMap) (err error) {
+	if r.Id == 0 {
+		err = db.Insert(r)
 	} else {
-		_, err = db.Update(c)
+		_, err = db.Update(r)
 	}
 	return err
 }
 
-func (c *Widget) Validate() error {
-	if c.Name == "" {
+func (r *Widget) Validate() error {
+	if r.Name == "" {
 		return errors.New("Validation error")
 	}
 	return nil
 }
 
-func (c *Widget) Delete(db *gorp.DbMap) (err error) {
-	_, err = db.Delete(c)
+func (r *Widget) Delete(db *gorp.DbMap) (err error) {
+	_, err = db.Delete(r)
 	return err
 }
 
