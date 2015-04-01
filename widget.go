@@ -8,7 +8,8 @@ import (
 type Widget struct {
 	Id        int64
 	Name      string
-	CreatedAt int64
+	CreatedAt time.Time `db:"created_at"`
+	UpdatedAt time.Time `db:"updated_at"`
 }
 
 type WidgetPublic struct {
@@ -76,4 +77,15 @@ func (c *Widget) Validate() error {
 func (c *Widget) Delete() (err error) {
 	_, err = api.DB.Delete(c)
 	return err
+}
+
+func (r *Widget) PreInsert(s gorp.SqlExecutor) error {
+	r.CreatedAt = time.Now()
+	r.UpdatedAt = r.CreatedAt
+	return nil
+}
+
+func (r *Widget) PreUpdate(s gorp.SqlExecutor) error {
+	r.UpdatedAt = time.Now()
+	return nil
 }
