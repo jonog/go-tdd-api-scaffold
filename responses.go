@@ -6,8 +6,8 @@ import (
 )
 
 func Error(w http.ResponseWriter, error string, code int) {
-	w.WriteHeader(code)
 	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(code)
 	output, err := json.Marshal(map[string]string{"error": error})
 	if err != nil {
 		panic(err)
@@ -16,7 +16,7 @@ func Error(w http.ResponseWriter, error string, code int) {
 }
 
 func Respond(w http.ResponseWriter, data []byte, code int) {
-	w.WriteHeader(code)
 	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(code)
 	w.Write(data)
 }
