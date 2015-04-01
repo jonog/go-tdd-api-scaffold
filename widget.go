@@ -2,14 +2,15 @@ package main
 
 import (
 	"errors"
+	"strings"
 	"time"
 
 	"github.com/go-gorp/gorp"
 )
 
 type Widget struct {
-	Id        int64
-	Name      string
+	Id        int64     `db:"id"`
+	Name      string    `db:"name"`
 	CreatedAt time.Time `db:"created_at"`
 	UpdatedAt time.Time `db:"updated_at"`
 }
@@ -22,6 +23,8 @@ type WidgetPublic struct {
 type WidgetParams struct {
 	Name string `json:"name"`
 }
+
+var WidgetColumns string = strings.Join([]string{"id", "name", "created_at", "updated_at"}, ",")
 
 func (c *Widget) Export() WidgetPublic {
 	return WidgetPublic{
@@ -50,13 +53,13 @@ func CreateWidget(db *gorp.DbMap, params *WidgetParams) (*Widget, error) {
 }
 
 func GetAllWidgets(db *gorp.DbMap) (widgets []Widget, err error) {
-	_, err = db.Select(&widgets, "SELECT * FROM widgets")
+	_, err = db.Select(&widgets, "select "+WidgetColumns+" from widgets")
 	return widgets, err
 }
 
 func FindWidget(db *gorp.DbMap, id int64) (*Widget, error) {
 	resource := Widget{}
-	err := db.SelectOne(&resource, "select * from widgets where id=$1", id)
+	err := db.SelectOne(&resource, "select "+WidgetColumns+" from widgets where id=$1", id)
 	return &resource, err
 }
 
