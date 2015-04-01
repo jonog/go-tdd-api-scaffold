@@ -125,7 +125,6 @@ func WidgetsUpdate(a *Api, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	widget.Name = params.Name
 	widget.Save(a.DB)
 
 	widgetJSON, err := json.Marshal(widget.Export())
