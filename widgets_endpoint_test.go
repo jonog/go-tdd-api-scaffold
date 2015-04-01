@@ -18,10 +18,10 @@ var _ = Describe("API", func() {
 
 		It("returns the list of widgets", func() {
 
-			r1, err := CreateWidget("Yo 1")
+			r1, err := CreateWidget(&WidgetParams{Name: "Yo 1"})
 			HandleTestError(err)
 
-			r2, err := CreateWidget("Yo 2")
+			r2, err := CreateWidget(&WidgetParams{Name: "Yo 2"})
 			HandleTestError(err)
 
 			request, _ := http.NewRequest("GET", "/widgets", nil)
@@ -83,7 +83,7 @@ var _ = Describe("API", func() {
 
 		It("returns a widget", func() {
 
-			widget, err := CreateWidget("Yo 1")
+			widget, err := CreateWidget(&WidgetParams{Name: "Yo 1"})
 			HandleTestError(err)
 
 			url := "/widgets/" + strconv.FormatInt(widget.Id, 10)
@@ -96,7 +96,7 @@ var _ = Describe("API", func() {
 
 		It("returns a 404 if the widget does not exist", func() {
 
-			widget, err := CreateWidget("Yo 1")
+			widget, err := CreateWidget(&WidgetParams{Name: "Yo 1"})
 			HandleTestError(err)
 			widgetId := widget.Id
 			err = widget.Delete()
@@ -116,7 +116,7 @@ var _ = Describe("API", func() {
 
 		It("updates a widget", func() {
 
-			widget, err := CreateWidget("Yo 1")
+			widget, err := CreateWidget(&WidgetParams{Name: "Yo 1"})
 			HandleTestError(err)
 
 			url := "/widgets/" + strconv.FormatInt(widget.Id, 10)
@@ -141,7 +141,7 @@ var _ = Describe("API", func() {
 
 		It("returns a 404 if the widget does not exist", func() {
 
-			widget, err := CreateWidget("Yo 1")
+			widget, err := CreateWidget(&WidgetParams{Name: "Yo 1"})
 			HandleTestError(err)
 			widgetId := widget.Id
 			err = widget.Delete()
@@ -157,7 +157,7 @@ var _ = Describe("API", func() {
 
 		It("returns a 400 if params are invalid", func() {
 
-			widget, err := CreateWidget("Yo 1")
+			widget, err := CreateWidget(&WidgetParams{Name: "Yo 1"})
 			HandleTestError(err)
 
 			url := "/widgets/" + strconv.FormatInt(widget.Id, 10)
@@ -179,7 +179,7 @@ var _ = Describe("API", func() {
 
 		It("deletes a widget", func() {
 
-			widget, err := CreateWidget("Yo 1")
+			widget, err := CreateWidget(&WidgetParams{Name: "Yo 1"})
 			HandleTestError(err)
 
 			request, _ := http.NewRequest("DELETE", "/widgets/"+strconv.FormatInt(widget.Id, 10), nil)
@@ -194,7 +194,7 @@ var _ = Describe("API", func() {
 
 		It("returns a 404 if the widget does not exist", func() {
 
-			widget, err := CreateWidget("Yo 1")
+			widget, err := CreateWidget(&WidgetParams{Name: "Yo 1"})
 			HandleTestError(err)
 			widgetId := widget.Id
 			err = widget.Delete()
